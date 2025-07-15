@@ -1,6 +1,8 @@
 const express = require("express")
 const router = express.Router()
+const bcrypt = require("bcrypt")
 const User = require("../models/user.js")
+
 
 
 
@@ -23,7 +25,8 @@ router.post("/sign-up", async(req,res) =>{
     if(req.body.password !== req.body.confirmPassword){
         return res.send("password and confirmPassword are diff")
     }
-
+    const hashedPassword = bcrypt.hashSync(req.body.password, 10)
+    req.body.password = hashedPassword
     const newUser = await User.create(req.body)
     res.send(`thanks for sign up ${newUser.username}`)
 })
