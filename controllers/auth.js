@@ -39,13 +39,17 @@ router.get("/sign-in" ,(req,res)=>{
 router.post("/sign-in",async(req,res)=>{
     const userInDB = await User.findOne({username: req.body.username})
     if(!userInDB) {
-        res.send("No username , need to sing-up")
+        return res.send("No username , need to sing-up")
     }
     const validPassword = bcrypt.compareSync(req.body.password, userInDB.password)
     if(!validPassword){
-        res.send("Wrong Password, try again")
+        return res.send("Wrong Password, try again")
     }
-    res.send ("Welcome")
+    req.session.user = {
+        username: userInDB.username,
+        _id: userInDB._id,
+    }
+    res.redirect("/")
 })
 
 
