@@ -8,6 +8,7 @@ const methodOverride = require("method-override");
 const morgan = require("morgan");
 const MongoStore = require("connect-mongo")
 const isSignIn = require("./middleware/is-sign-in.js")
+const passUserToVeiw = require("./middleware/pass-user-to-view.js")
 
 // Set the port from environment variable or default to 3000
 const port = process.env.PORT ? process.env.PORT : "4000";
@@ -31,6 +32,7 @@ app.use(session({
 
     })
 }))
+app.use(passUserToVeiw)
 
 
 //ROUTES
@@ -44,7 +46,7 @@ app.get("/vip-lounge", isSignIn,(req,res)=>{
 
 // GET /
 app.get("/", async (req, res) => {
-  res.render("index.ejs", {title: "myApp", user:req.session.user});
+  res.render("index.ejs", {title: "myApp"});
 });
 app.listen(port, () => {
   console.log(`The express app is ready on port ${port}!`);
